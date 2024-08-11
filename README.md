@@ -1,3 +1,5 @@
+### Application at https://hatedetectorservice-hagwa8gya7gnhvef.uksouth-01.azurewebsites.net/
+
 # Hate Speech Detection with xLSTM
 
 This project utilizes an advanced xLSTM model to detect hate speech in text data. The xLSTM model extends the capabilities of traditional LSTM networks by incorporating advanced gating mechanisms, attention mechanisms, and hierarchical structures, allowing it to better handle long-term dependencies and complex patterns in textual data. This project aims to improve the accuracy and robustness of hate speech detection systems.
