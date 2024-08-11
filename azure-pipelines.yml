@@ -1,0 +1,78 @@
+# trigger:
+# - main
+
+# pool:
+#   name: 'Default'  # Use the name of your agent pool
+#   demands:
+#   - agent.name -equals lucy-agent  # Ensure it uses the correct agent
+
+# variables:
+#   imageName: 'lucynowacki/hatedetector'
+
+# steps:
+# - script: |
+#     python --version  # This will show the installed Python version
+#     python -m pip install --upgrade pip
+#     pip install -r requirements.txt
+#   displayName: 'Install dependencies'
+
+# - task: Docker@2
+#   inputs:
+#     containerRegistry: 'HateDetectorDockerHubConnection'
+#     repository: '$(imageName)'
+#     command: 'buildAndPush'
+#     Dockerfile: '**/MyDockerfile.dockerfile'
+#     tags: |
+#       $(Build.BuildId)
+
+
+trigger:
+- main
+
+pool:
+  name: 'Default'  # Use the name of your agent pool
+  demands:
+    - agent.name -equals lucy-agent  # Ensure it uses the correct agent
+
+variables:
+  imageName: 'lucynowacki/hatedetector'
+
+# Step 2: Build the Docker image
+steps:
+- task: Docker@2
+  inputs:
+    containerRegistry: 'HateDetectorDockerHubConnection'
+    repository: '$(imageName)'
+    command: 'build'
+    Dockerfile: 'MyDockerfile.dockerfile'  # Specify the correct path to Dockerfile
+    buildContext: '$(Build.SourcesDirectory)'  # Ensure build context is set correctly
+<<<<<<< HEAD
+=======
+    tags: |
+      $(Build.BuildId)
+
+# Step 4: Push the Docker image
+- task: Docker@2
+  inputs:
+    containerRegistry: 'HateDetectorDockerHubConnection'
+    repository: '$(imageName)'
+    command: 'push'
+>>>>>>> 0af7232 (Initial commit for new repository)
+    tags: |
+      $(Build.BuildId)
+
+# Step 4: Push the Docker image
+- task: Docker@2
+  inputs:
+    containerRegistry: 'HateDetectorDockerHubConnection'
+    repository: '$(imageName)'
+    command: 'push'
+    tags: |
+      $(Build.BuildId)
+
+# Deploy to Azure App Service
+- task: AzureWebAppContainer@1
+  inputs:
+    #azureSubscription: 'HateDetectorServiceConnection'  # Your Azure service connection
+    appName: 'HateDetectorService'  # Ensure this is the correct App Service name
+    imageName: '$(imageName):$(Build.BuildId)'

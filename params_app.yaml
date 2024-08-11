@@ -1,0 +1,52 @@
+training:
+  batch_size: 128
+  lr: 1e-3
+  seed: 40
+  val_every_step: 100
+  lr_warmup_steps: 500
+  lr_decay_until_steps: ${.num_steps}
+  lr_decay_factor: 0.001
+  weight_decay: 0.1
+  num_pre_steps: 6
+  num_steps: 4000
+  device: cpu
+  amp_precision: bfloat16
+  weight_precision: float32
+  enable_mixed_precision: true
+
+model:
+  num_blocks: 5
+  embedding_dim: 64
+  dropout: 0.1  # Add the dropout parameter here
+  add_embedding_dropout: true  # Add the add_embedding_dropout parameter here
+  tie_weights: false # Add the tie_weights parameter here
+  weight_decay_on_embedding: false  # Add the weight_decay_on_embedding parameter here
+  mlstm_block:
+    mlstm:
+      num_heads: 2
+  slstm_block:
+    slstm:
+      backend: vanilla
+      num_heads: 1
+  slstm_at: [1]
+  feedforward:
+    proj_factor: 1.3
+    act_fn: gelu
+
+  vocab_size: 50257
+  
+  schedul_next_token: 
+    first: 84
+    quarter: 84
+    half: 84
+    three_quarters: 84
+
+  schedul: 
+    first: 84
+    quarter: 128
+    half: 128
+    three_quarters: 128
+
+  block_map:  # Adding the missing block_map configuration
+    mlstm: mlstm_block
+    slstm: slstm_block
